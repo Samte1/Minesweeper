@@ -135,11 +135,11 @@ public class MineSweeper extends JFrame implements MouseListener
     @Override
     public void mouseClicked(MouseEvent event)
     {
+        Object source = event.getSource();
+        
         // Left Mouse Click
         if(event.getButton() == MouseEvent.BUTTON1) 
         {
-            Object source = event.getSource();
-
             boolean lose = false;
 
             for(int i = 0; i < gamePanels.length; ++i)
@@ -172,10 +172,21 @@ public class MineSweeper extends JFrame implements MouseListener
             }
         } // End of Left Mouse Click
         
-        // Right MouseClick
+        // Right Mouse Click
         if(event.getButton() == MouseEvent.BUTTON3) 
         {
             System.out.println("Boop");
+            
+            for(int i = 0; i < gamePanels.length; ++i)
+            {
+                if (source == gamePanels[i])
+                {
+                    gamePanels[i].setBackground(Color.RED);
+                    
+                }
+            }
+            
+            
         } // end of Right Mouse Click
     }
     
