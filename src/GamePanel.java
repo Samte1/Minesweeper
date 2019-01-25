@@ -11,7 +11,7 @@ public class GamePanel extends JPanel
     private boolean bomb;
     private int row;
     private int col;
-    private boolean revealed; // default value of false
+    private boolean revealed;
     
     public GamePanel(int row, int col)
     {
