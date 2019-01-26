@@ -13,6 +13,7 @@ import javax.swing.JOptionPane;
  * 
  * Updated 25/01/19
  * - Added recursive function for 0 values that reveals panels near it.
+ * - Messed up Win condition counter
  */
 public class MineSweeper extends JFrame implements MouseListener
 {
@@ -69,7 +70,7 @@ public class MineSweeper extends JFrame implements MouseListener
     public final void createBombs()
     {
         int max = rows * cols;
-        int numBombs = max / 5;
+        int numBombs = 5; //max / 5;
         winCondition = max - numBombs;
         
         for (int i = 0; i < numBombs; ++i)
@@ -146,17 +147,26 @@ public class MineSweeper extends JFrame implements MouseListener
             {
                 if (source == gamePanels[i])
                 {
-                    // reveal will return a true of that panel is a bomb and false 
-                    // if not
-                    lose = reveal(gamePanels[i], gameLabels[i]);
-
-                    // if it is not a bomb then add to the win condition.
-                    if (!lose){
-                        ++clicks;
+                    // test if the status of panel is free
+                    if (gamePanels[i].getStatus() == 0){
+                        // reveal will return a true of that panel is a bomb and false 
+                        // if not
+                        lose = reveal(gamePanels[i], gameLabels[i]);
+                        
+                        // if triggers a 0 panel then count number of revealed tiles
+                        if (gamePanels[i].getValue() == 0)
+                        {
+                            clicks = countRevealed();
+                        }
+                        // if it is not a bomb then add to the win condition.
+                        if (!lose){
+                            ++clicks;
+                        }
                     }
                 }
             }
-
+            
+            
             // lose condition
             if (lose)
             {
@@ -175,18 +185,26 @@ public class MineSweeper extends JFrame implements MouseListener
         // Right Mouse Click
         if(event.getButton() == MouseEvent.BUTTON3) 
         {
-            System.out.println("Boop");
             
             for(int i = 0; i < gamePanels.length; ++i)
             {
                 if (source == gamePanels[i])
                 {
-                    gamePanels[i].setBackground(Color.RED);
-                    
+                    switch(gamePanels[i].getStatus())
+                    {
+                        case 0:
+                            gamePanels[i].setBackground(Color.RED);
+                            gamePanels[i].setStatus(2);
+                            break;
+                        case 1:
+                            break;
+                        case 2:
+                            gamePanels[i].setBackground(Color.WHITE);
+                            gamePanels[i].setStatus(0);
+                            break;
+                    }
                 }
             }
-            
-            
         } // end of Right Mouse Click
     }
     
@@ -209,6 +227,7 @@ public class MineSweeper extends JFrame implements MouseListener
             gameLabel.setText("BOMB");
             gamePanel.setBackground(Color.RED);
             gamePanel.setRevealed(true);
+            gamePanel.setStatus(1); 
             return true;
         }
         else
@@ -216,6 +235,7 @@ public class MineSweeper extends JFrame implements MouseListener
             gameLabel.setText("" + gamePanel.getValue());
             gamePanel.setBackground(Color.LIGHT_GRAY);
             gamePanel.setRevealed(true);
+            gamePanel.setStatus(1);
                     
             // if the value is 0 
             // then Get the positions around the 0 value and reveal them 
@@ -237,23 +257,47 @@ public class MineSweeper extends JFrame implements MouseListener
                             if (colArray[k] >= 0 && colArray[k] < cols)
                             {
                                 position = rowArray[j] * cols + colArray[k];
-                                if (gamePanels[position].isRevealed())
+//                                if (gamePanels[position].isRevealed())
+//                                {
+//                                    // if it is already revealed then do nothing
+//                                }
+//                                else
+//                                {
+//                                    // is not revealed then reveal it
+//                                    reveal(gamePanels[position], gameLabels[position]);
+//                                }
+
+                                switch(gamePanels[position].getStatus())
                                 {
-                                    // if it is already revealed then do nothing
-                                }
-                                else
-                                {
-                                    // is not revealed then reveal it
-                                    reveal(gamePanels[position], gameLabels[position]);
+                                    case 0:
+                                        reveal(gamePanels[position], gameLabels[position]);
+                                        break;
+                                    case 1:
+                                        break;
+                                    case 2:
+                                        break;
                                 }
                             }
                         }
                     }
                 }
             }
-            
             return false;
         }
+    }
+    
+    public int countRevealed()
+    {
+        int count = 0;
+        for (int i = 0; i < rows * cols; ++i)
+        {
+            if(gamePanels[i].getStatus() == 1)
+            {
+                ++count;
+            }
+        }
+        System.out.println(count);
+        return count;
     }
     
     public void findPosition(int row, int col)

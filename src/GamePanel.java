@@ -12,6 +12,7 @@ public class GamePanel extends JPanel
     private int row;
     private int col;
     private boolean revealed;
+    private int status; // 0 for untouched, 1 for shown, 2 for flag/untouchable
     
     public GamePanel(int row, int col)
     {
@@ -19,6 +20,7 @@ public class GamePanel extends JPanel
         value = 0;
         bomb = false;
         revealed = false;
+        status = 0;
         this.row = row;
         this.col = col;
     }
@@ -71,6 +73,16 @@ public class GamePanel extends JPanel
     public void setRevealed(boolean revealed)
     {
         this.revealed = revealed;
+    }
+    
+    public int getStatus()
+    {
+        return status;
+    }
+    
+    public void setStatus(int status)
+    {
+        this.status = status;
     }
     
     
