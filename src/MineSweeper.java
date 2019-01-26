@@ -13,7 +13,6 @@ import javax.swing.JOptionPane;
  * 
  * Updated 25/01/19
  * - Added recursive function for 0 values that reveals panels near it.
- * - Messed up Win condition counter
  */
 public class MineSweeper extends JFrame implements MouseListener
 {
