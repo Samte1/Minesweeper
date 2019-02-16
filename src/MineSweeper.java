@@ -69,7 +69,7 @@ public class MineSweeper extends JFrame implements MouseListener
     public final void createBombs()
     {
         int max = rows * cols;
-        int numBombs = 5; //max / 5;
+        int numBombs = max / 5;
         winCondition = max - numBombs;
         
         for (int i = 0; i < numBombs; ++i)
